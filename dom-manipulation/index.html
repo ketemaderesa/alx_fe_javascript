@@ -7,47 +7,41 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
       padding: 20px;
+      text-align: center;
     }
     #quoteDisplay {
-      margin: 20px 0;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      min-height: 100px;
+      margin: 20px auto;
+      padding: 15px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      max-width: 500px;
+      min-height: 60px;
+      background: #f9f9f9;
     }
-    button {
-      padding: 8px 16px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    select, input, button {
       margin: 5px;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    input {
       padding: 8px;
-      margin: 5px;
-      width: 300px;
     }
   </style>
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
-  
-  <div id="quoteDisplay"></div>
+
+  <!-- Category Selector -->
+  <label for="categorySelect">Choose a category:</label>
+  <select id="categorySelect"></select>
+
+  <!-- Quote Display -->
+  <div id="quoteDisplay">Click "Show New Quote" to begin!</div>
   <button id="newQuote">Show New Quote</button>
-  
+
+  <!-- Add New Quote Form -->
+  <h2>Add a New Quote</h2>
   <div>
-    <h3>Add New Quote</h3>
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button onclick="addQuote()">Add Quote</button>
+    <button id="addQuoteBtn">Add Quote</button>
   </div>
 
   <script src="script.js"></script>
