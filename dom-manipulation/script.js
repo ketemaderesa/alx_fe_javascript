@@ -32,8 +32,8 @@ function populateCategories() {
   });
 }
 
-// Display a random quote
-function displayRandomQuote() {
+// Show random quote (must be named exactly showRandomQuote)
+function showRandomQuote() {
   const selectedCategory = categorySelect.value;
   const filteredQuotes = selectedCategory === "All"
     ? quotes
@@ -66,8 +66,8 @@ function addQuote() {
 }
 
 // Event listeners
-newQuoteBtn.addEventListener("click", displayRandomQuote);
+newQuoteBtn.addEventListener("click", showRandomQuote);
 addQuoteBtn.addEventListener("click", addQuote);
 
-// Initialize
+// Initialize categories
 populateCategories();
