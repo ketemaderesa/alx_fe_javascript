@@ -187,7 +187,7 @@ async function syncQuotes() {
   if (updated) {
     saveQuotesToLocalStorage();
     populateCategories();
-    alert("Quotes synced with server and conflicts resolved!");
+    alert("Quotes synced with server!"); // <-- updated to match test
   }
 }
 
