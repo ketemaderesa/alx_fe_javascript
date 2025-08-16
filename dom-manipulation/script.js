@@ -11,9 +11,10 @@ const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
 const categorySelect = document.getElementById("categorySelect");
 const importFile = document.getElementById("importFile");
+const exportBtn = document.getElementById("exportBtn");
 
 // Save quotes to localStorage
-function saveQuotes() {
+function saveQuotesToLocalStorage() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
@@ -51,7 +52,7 @@ function showRandomQuote() {
   const randomQuote = filteredQuotes[randomIndex];
   quoteDisplay.textContent = `"${randomQuote.text}" — ${randomQuote.category}`;
 
-  // Optionally save last viewed quote in sessionStorage
+  // Save last viewed quote in sessionStorage
   sessionStorage.setItem("lastQuote", JSON.stringify(randomQuote));
 }
 
@@ -66,7 +67,7 @@ function addQuote(textInput, categoryInput) {
   }
 
   quotes.push({ text, category });
-  saveQuotes();
+  saveQuotesToLocalStorage();
   populateCategories();
   textInput.value = "";
   categoryInput.value = "";
@@ -98,7 +99,7 @@ function createAddQuoteForm() {
 }
 
 // Export quotes to JSON file
-function exportQuotes() {
+function exportToJsonFile() {
   const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -117,7 +118,7 @@ function importFromJsonFile(event) {
       const importedQuotes = JSON.parse(e.target.result);
       if (Array.isArray(importedQuotes)) {
         quotes.push(...importedQuotes);
-        saveQuotes();
+        saveQuotesToLocalStorage();
         populateCategories();
         alert("Quotes imported successfully!");
       } else {
@@ -134,10 +135,10 @@ function importFromJsonFile(event) {
 populateCategories();
 createAddQuoteForm();
 newQuoteBtn.addEventListener("click", showRandomQuote);
-document.getElementById("exportBtn").addEventListener("click", exportQuotes);
+exportBtn.addEventListener("click", exportToJsonFile);
 importFile.addEventListener("change", importFromJsonFile);
 
-// Optionally load last viewed quote from sessionStorage
+// Load last viewed quote from sessionStorage
 const lastQuote = JSON.parse(sessionStorage.getItem("lastQuote"));
 if (lastQuote) {
   quoteDisplay.textContent = `"${lastQuote.text}" — ${lastQuote.category}`;
