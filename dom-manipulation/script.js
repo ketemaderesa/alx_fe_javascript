@@ -1,3 +1,4 @@
+// Quotes array with text and category
 let quotes = [
   { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
   { text: "Life is what happens when you’re busy making other plans.", category: "Life" },
@@ -5,11 +6,13 @@ let quotes = [
   { text: "Your time is limited, don’t waste it living someone else’s life.", category: "Wisdom" }
 ];
 
+// DOM Elements
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
 const addQuoteBtn = document.getElementById("addQuoteBtn");
 const categorySelect = document.getElementById("categorySelect");
 
+// Populate categories dropdown
 const populateCategories = () => {
   const categories = [...new Set(quotes.map(q => q.category))];
   categorySelect.innerHTML = "";
@@ -27,6 +30,7 @@ const populateCategories = () => {
   });
 };
 
+// Display a random quote
 const displayRandomQuote = () => {
   const selectedCategory = categorySelect.value;
   const filteredQuotes = selectedCategory === "All" ? quotes : quotes.filter(q => q.category === selectedCategory);
@@ -41,6 +45,7 @@ const displayRandomQuote = () => {
   quoteDisplay.textContent = `"${randomQuote.text}" — ${randomQuote.category}`;
 };
 
+// Add a new quote
 const addQuote = () => {
   const newQuoteText = document.getElementById("newQuoteText").value.trim();
   const newQuoteCategory = document.getElementById("newQuoteCategory").value.trim();
@@ -56,7 +61,9 @@ const addQuote = () => {
   document.getElementById("newQuoteCategory").value = "";
 };
 
+// Event listeners
 newQuoteBtn.addEventListener("click", displayRandomQuote);
 addQuoteBtn.addEventListener("click", addQuote);
 
+// Initialize categories
 populateCategories();
