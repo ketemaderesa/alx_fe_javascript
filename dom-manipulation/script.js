@@ -75,6 +75,9 @@ function addQuote(textInput, categoryInput) {
   populateCategories(); // update filter options
   textInput.value = "";
   categoryInput.value = "";
+
+  // Simulate sending new quote to server
+  postQuoteToServer({ text, category });
 }
 
 // Dynamically create Add Quote form
@@ -138,38 +141,58 @@ function importFromJsonFile(event) {
 // ====== SERVER SYNC AND CONFLICT RESOLUTION ======
 const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Mock API
 
-async function fetchServerQuotes() {
+// Fetch quotes from server
+async function fetchQuotesFromServer() {
   try {
     const response = await fetch(SERVER_URL);
     const serverData = await response.json();
-    // Transform server data to match quote format if needed
     const serverQuotes = serverData.slice(0, 10).map(post => ({
       text: post.title,
       category: "Server"
     }));
 
-    // Conflict resolution: server data takes precedence
-    let updated = false;
-    serverQuotes.forEach(sq => {
-      if (!quotes.some(q => q.text === sq.text && q.category === sq.category)) {
-        quotes.push(sq);
-        updated = true;
-      }
-    });
-
-    if (updated) {
-      saveQuotesToLocalStorage();
-      populateCategories();
-      alert("Quotes updated from server and conflicts resolved!");
-    }
-
+    return serverQuotes;
   } catch (err) {
-    console.error("Error syncing with server:", err);
+    console.error("Error fetching quotes from server:", err);
+    return [];
   }
 }
 
-// Periodically fetch server data every 30 seconds
-setInterval(fetchServerQuotes, 30000);
+// Post new quote to server (mock)
+async function postQuoteToServer(quote) {
+  try {
+    await fetch(SERVER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quote)
+    });
+    console.log("Quote posted to server:", quote);
+  } catch (err) {
+    console.error("Error posting quote to server:", err);
+  }
+}
+
+// Sync quotes: fetch from server and resolve conflicts
+async function syncQuotes() {
+  const serverQuotes = await fetchQuotesFromServer();
+  let updated = false;
+
+  serverQuotes.forEach(sq => {
+    if (!quotes.some(q => q.text === sq.text && q.category === sq.category)) {
+      quotes.push(sq);
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveQuotesToLocalStorage();
+    populateCategories();
+    alert("Quotes synced with server and conflicts resolved!");
+  }
+}
+
+// Periodically check server every 30 seconds
+setInterval(syncQuotes, 30000);
 
 // ====== INITIALIZATION ======
 populateCategories();
@@ -185,4 +208,4 @@ if (lastQuote) {
 }
 
 // Initial server sync on page load
-fetchServerQuotes();
+syncQuotes();
