@@ -9,7 +9,7 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
 // DOM elements
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
-const categorySelect = document.getElementById("categorySelect");
+const categoryFilter = document.getElementById("categoryFilter");
 const importFile = document.getElementById("importFile");
 const exportBtn = document.getElementById("exportBtn");
 
@@ -18,28 +18,26 @@ function saveQuotesToLocalStorage() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
-// Populate category dropdown
+// Populate categories for filter dropdown
 function populateCategories() {
   const categories = [...new Set(quotes.map(q => q.category))];
-  categorySelect.innerHTML = "";
-
-  const allOption = document.createElement("option");
-  allOption.value = "All";
-  allOption.textContent = "All";
-  categorySelect.appendChild(allOption);
-
+  categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
     option.textContent = cat;
-    categorySelect.appendChild(option);
+    categoryFilter.appendChild(option);
   });
+
+  // Restore last selected filter
+  const lastFilter = localStorage.getItem("lastSelectedCategory");
+  if (lastFilter) categoryFilter.value = lastFilter;
 }
 
 // Show random quote
 function showRandomQuote() {
-  const selectedCategory = categorySelect.value;
-  const filteredQuotes = selectedCategory === "All"
+  const selectedCategory = categoryFilter.value;
+  const filteredQuotes = selectedCategory === "all"
     ? quotes
     : quotes.filter(q => q.category === selectedCategory);
 
@@ -56,6 +54,12 @@ function showRandomQuote() {
   sessionStorage.setItem("lastQuote", JSON.stringify(randomQuote));
 }
 
+// Filter quotes based on dropdown selection
+function filterQuotes() {
+  localStorage.setItem("lastSelectedCategory", categoryFilter.value);
+  showRandomQuote(); // show a random quote from the filtered category
+}
+
 // Add a new quote
 function addQuote(textInput, categoryInput) {
   const text = textInput.value.trim();
@@ -68,7 +72,7 @@ function addQuote(textInput, categoryInput) {
 
   quotes.push({ text, category });
   saveQuotesToLocalStorage();
-  populateCategories();
+  populateCategories(); // update filter options
   textInput.value = "";
   categoryInput.value = "";
 }
